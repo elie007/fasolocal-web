@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
+    <header className="sticky top-0 z-50 w-full bg-[#FAF9F6] shadow-sm">
       {isTopBannerOpen && (
         <div className="bg-secondary px-4 py-2 text-center text-sm font-medium text-gray-900 relative">
           <span>🎁 Livraison GRATUITE dès 10 000 FCFA · Code : FASOLOCAL</span>
@@ -290,7 +290,7 @@ export const Header: React.FC = () => {
               >
                 <ShoppingCart size={24} />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white shadow-sm">
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full border-2 border-white shadow-sm">
                     {totalItems}
                   </span>
                 )}

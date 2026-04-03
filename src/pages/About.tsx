@@ -6,7 +6,7 @@ import { PRODUCTEURS } from '../constants';
 
 export const About: React.FC = () => {
   return (
-    <div className="bg-stone-50 min-h-screen font-sans text-[#424242] pb-24">
+    <div className="bg-[#FAF9F6] min-h-screen font-sans text-stone-700 pb-24">
       {/* Hero */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -18,7 +18,7 @@ export const About: React.FC = () => {
             <h1 className="text-5xl md:text-7xl font-bold font-serif text-[#2E7D32] mb-6 leading-tight">
               Notre Mission
             </h1>
-            <p className="text-xl md:text-2xl leading-relaxed">
+            <p className="text-xl md:text-2xl leading-relaxed text-stone-600">
               FasoLocal connecte directement les producteurs artisanaux burkinabè avec les consommateurs urbains, 
               pour valoriser nos produits locaux et soutenir l'économie du Faso.
             </p>
@@ -46,8 +46,8 @@ export const About: React.FC = () => {
                 accessible via WhatsApp, où chaque commande a un impact direct sur la vie d'un producteur burkinabè.
               </p>
             </div>
-            <div className="mt-8 p-8 bg-white rounded-2xl border-l-4 border-[#2E7D32] shadow-sm">
-              <p className="italic text-xl font-serif leading-relaxed">
+            <div className="mt-8 p-8 bg-white rounded-2xl border-l-4 border-[#EF6C00] shadow-sm">
+              <p className="italic text-xl font-serif leading-relaxed text-[#2E7D32]">
                 "Notre ambition est que chaque foyer burkinabè puisse consommer local, sain et frais, tout en sachant exactement qui a préparé son produit."
               </p>
             </div>
@@ -59,13 +59,13 @@ export const About: React.FC = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="aspect-[4/3] rounded-3xl bg-stone-200 flex items-center justify-center text-stone-400 font-bold text-2xl shadow-lg overflow-hidden">
+            <div className="aspect-[4/3] rounded-3xl bg-stone-200 flex items-center justify-center text-[#2E7D32]/20 font-bold text-2xl shadow-lg overflow-hidden">
               <div className="absolute inset-0 bg-[#2E7D32]/5 mix-blend-multiply"></div>
               FasoLocal
             </div>
             <div className="absolute -bottom-8 -left-8 bg-white p-8 rounded-3xl shadow-xl border border-stone-100">
               <p className="text-[#2E7D32] font-bold text-4xl font-serif">100%</p>
-              <p className="text-sm font-bold uppercase tracking-widest mt-2 text-stone-500">Made in Burkina</p>
+              <p className="text-sm font-bold uppercase tracking-widest mt-2 text-[#EF6C00]">Made in Burkina</p>
             </div>
           </motion.div>
         </div>
@@ -92,13 +92,13 @@ export const About: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-8 bg-stone-50 rounded-3xl border border-stone-100 hover:shadow-lg transition-all duration-300 group"
+                className="p-8 bg-white rounded-3xl border border-stone-200 hover:shadow-lg hover:shadow-stone-200 transition-all duration-300 group"
               >
-                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#2E7D32] mb-6 shadow-sm group-hover:scale-110 transition-transform">
+                <div className="w-14 h-14 bg-[#FAF9F6] rounded-2xl flex items-center justify-center text-[#EF6C00] mb-6 shadow-sm group-hover:scale-110 transition-transform">
                   <v.icon size={28} strokeWidth={1.5} />
                 </div>
                 <h3 className="text-2xl font-bold font-serif text-[#2E7D32] mb-4">{v.title}</h3>
-                <p className="leading-relaxed text-lg">{v.desc}</p>
+                <p className="leading-relaxed text-lg text-stone-600">{v.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -110,7 +110,7 @@ export const About: React.FC = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="max-w-2xl">
             <h2 className="text-4xl md:text-5xl font-bold font-serif text-[#2E7D32] mb-6">Ils font FasoLocal</h2>
-            <p className="text-xl leading-relaxed">Découvrez les visages derrière vos produits préférés.</p>
+            <p className="text-xl leading-relaxed text-stone-600">Découvrez les visages derrière vos produits préférés.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
             {PRODUCTEURS.map((p, i) => (
@@ -131,7 +131,7 @@ export const About: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-bold font-serif text-2xl text-[#2E7D32]">{p.nom}</h3>
-                  <p className="text-stone-500 mt-1">{p.specialite}</p>
+                  <p className="text-[#EF6C00] font-medium mt-1">{p.specialite}</p>
                 </div>
               </motion.div>
             ))}
@@ -144,7 +144,7 @@ export const About: React.FC = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="max-w-2xl">
             <h2 className="text-4xl md:text-5xl font-bold font-serif text-[#2E7D32] mb-6">L'Équipe FasoLocal</h2>
-            <p className="text-xl leading-relaxed">
+            <p className="text-xl leading-relaxed text-stone-600">
               Une équipe passionnée et engagée pour transformer l'agriculture burkinabè et valoriser nos savoir-faire locaux.
             </p>
           </div>
@@ -152,8 +152,8 @@ export const About: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
             {[
               {
-                name: "Wilfried Elie",
-                role: "Fondateur & Visionnaire",
+                name: "Monné Wilfried Elie",
+                role: "Fondateur & CEO",
                 image: "",
                 bio: "Passionné par le développement local et la tech au service de l'impact social."
               },
@@ -188,21 +188,21 @@ export const About: React.FC = () => {
                   {member.image ? (
                     <img src={member.image} alt={member.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
-                    <div className="text-stone-400 font-serif text-xl">FasoLocal</div>
+                    <div className="text-[#2E7D32]/20 font-serif text-xl">FasoLocal</div>
                   )}
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold font-serif text-[#2E7D32] mb-2">{member.name}</h3>
-                  <p className="text-xs font-bold text-stone-500 uppercase tracking-widest mb-4">{member.role}</p>
-                  <p className="leading-relaxed">{member.bio}</p>
+                  <p className="text-xs font-bold text-[#EF6C00] uppercase tracking-widest mb-4">{member.role}</p>
+                  <p className="leading-relaxed text-stone-600">{member.bio}</p>
                   <div className="flex justify-start gap-3 mt-6">
-                    <button className="p-2.5 bg-stone-100 rounded-xl text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-colors">
+                    <button className="p-2.5 bg-[#FAF9F6] rounded-xl text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-colors shadow-sm border border-stone-200">
                       <Linkedin size={18} />
                     </button>
-                    <button className="p-2.5 bg-stone-100 rounded-xl text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-colors">
+                    <button className="p-2.5 bg-[#FAF9F6] rounded-xl text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-colors shadow-sm border border-stone-200">
                       <Twitter size={18} />
                     </button>
-                    <button className="p-2.5 bg-stone-100 rounded-xl text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-colors">
+                    <button className="p-2.5 bg-[#FAF9F6] rounded-xl text-[#2E7D32] hover:bg-[#2E7D32] hover:text-white transition-colors shadow-sm border border-stone-200">
                       <Mail size={18} />
                     </button>
                   </div>
@@ -227,7 +227,7 @@ export const About: React.FC = () => {
             <div className="relative z-10 shrink-0">
               <Link 
                 to="/blog" 
-                className="inline-flex items-center gap-3 bg-white text-[#2E7D32] px-8 py-5 rounded-2xl font-bold text-lg hover:bg-stone-100 transition-colors shadow-xl"
+                className="inline-flex items-center gap-3 bg-white text-[#2E7D32] px-8 py-5 rounded-2xl font-bold text-lg hover:bg-[#FAF9F6] transition-colors shadow-xl"
               >
                 Lire le blog <TrendingUp size={20} />
               </Link>
@@ -238,4 +238,5 @@ export const About: React.FC = () => {
     </div>
   );
 };
+
 

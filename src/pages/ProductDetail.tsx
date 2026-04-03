@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Phone, Star, ShieldCheck, ChevronRight, ChevronLeft, Minus, Plus, Clock, Send, Maximize2, Share2, Facebook, Twitter, Link as LinkIcon, Check, AlertTriangle, Loader2, AlertCircle, ArrowRight, Package, Sunrise, Sun, Moon, Calendar } from 'lucide-react';
+import { ShoppingCart, Phone, Star, ShieldCheck, ChevronRight, ChevronLeft, Minus, Plus, Clock, Send, Maximize2, Share2, Facebook, Twitter, Link as LinkIcon, Check, AlertTriangle, Loader2, AlertCircle, ArrowRight, Package, Sunrise, Sun, Moon, Calendar, Wallet, Smartphone } from 'lucide-react';
 import { PRODUITS } from '../data';
 import { PRODUCTEURS, REVIEWS } from '../constants';
 import { useCart } from '../context/CartContext';
@@ -29,6 +29,24 @@ interface FirestoreErrorInfo {
   authInfo: any;
 }
 
+const ScooterIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    {/* Lignes de mouvement */}
+    <path d="M3 15h3 M4 18h2 M2 12h4" stroke="#1E5631" strokeWidth="1" strokeLinecap="round" opacity="0.4" />
+    
+    {/* Corps du scooter */}
+    <path d="M18.5 15c0-1.5-1-2.5-2.5-2.5H14l-1.5-3.5A2 2 0 0 0 10.6 8H8V5a1 1 0 0 0-2 0v4a1 1 0 0 0 1 1h3.6l1.2 2.8L9 13H6a2 2 0 0 0-2 2v2h1.2a3 3 0 0 0 5.6 0h2.4a3 3 0 0 0 5.6 0H20v-1a1.5 1.5 0 0 0-1.5-1.5z" fill="#1E5631" />
+    
+    {/* Roues */}
+    <circle cx="8" cy="17" r="2" fill="#FAF9F6" stroke="#1E5631" strokeWidth="1.5" />
+    <circle cx="16" cy="17" r="2" fill="#FAF9F6" stroke="#1E5631" strokeWidth="1.5" />
+    
+    {/* Reflets (relief) */}
+    <path d="M14 13.5h1.5" stroke="white" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+    <path d="M10.5 9.5l1 2" stroke="white" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+  </svg>
+);
+
 export const ProductDetail: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -47,6 +65,7 @@ export const ProductDetail: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
+  const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
@@ -304,7 +323,7 @@ export const ProductDetail: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 pb-[80px] lg:pb-12 space-y-16">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Image Display */}
         <div className="space-y-4">
@@ -362,13 +381,11 @@ export const ProductDetail: React.FC = () => {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-4xl font-bold font-serif text-gray-900">{nom}</h1>
-              {formatBadge && (
-                <span className="bg-[#F5A623] text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-md">
-                  {formatBadge}
-                </span>
-              )}
+              <span className="bg-[#1E5631] text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wide shadow-sm">
+                Produit Local 🇧🇫
+              </span>
               <span className="bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 border border-primary/20">
-                <ShieldCheck size={14} /> 🌿 Certifié FasoLocal
+                <ShieldCheck size={14} /> Certifié FasoLocal
               </span>
             </div>
             <div className="flex items-center gap-4">
@@ -399,17 +416,17 @@ export const ProductDetail: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-baseline flex-wrap gap-3">
+            <div className="flex items-baseline flex-wrap gap-2">
               <span className="text-[32px] sm:text-[40px] font-black text-[#2E7D32] whitespace-nowrap leading-none">
                 {formatPrice(prixPromo || prix)}
               </span>
               {unite && (
-                <span className="text-lg sm:text-xl text-gray-500 font-medium">
+                <span className="text-sm sm:text-base text-gray-400 font-normal">
                   / {unite}
                 </span>
               )}
               {prixPromo && (
-                <span className="text-xl sm:text-2xl text-gray-400 line-through whitespace-nowrap">
+                <span className="text-lg sm:text-xl text-gray-400 line-through whitespace-nowrap ml-2">
                   {formatPrice(prix)}
                 </span>
               )}
@@ -441,48 +458,46 @@ export const ProductDetail: React.FC = () => {
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <h4 className="font-bold text-xl flex items-center gap-2 text-gray-900 font-serif">
-                  <Clock size={22} className="text-primary" /> Créneaux de livraison
+                <h4 className="font-bold text-xl flex items-center gap-2 text-[#1E5631] font-serif">
+                  <ScooterIcon className="w-6 h-6" /> Créneaux de livraison
                 </h4>
-                <p className="text-sm text-gray-500 font-medium">
-                  Livraison partout à Ouagadougou 🛵
+                <p className="text-sm text-[#1E5631] font-medium">
+                  Livraison partout à Ouagadougou
                 </p>
               </div>
-              <div className="bg-primary/10 text-primary px-4 py-2 rounded-2xl text-sm font-bold animate-pulse">
+              <div className="bg-stone-50 border border-stone-200 text-[#1E5631] px-4 py-2 rounded-full text-sm font-bold">
                 Commandez maintenant pour être livré <span className="underline">{nextDelivery}</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-accent/50 p-4 rounded-2xl border border-primary/5 space-y-3 group hover:bg-accent transition-colors">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm group-hover:scale-110 transition-transform">
-                  <Sunrise size={20} />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Avant 10h</p>
-                  <p className="font-bold text-gray-900">Livré 14h - 17h</p>
-                </div>
-              </div>
-
-              <div className="bg-accent/50 p-4 rounded-2xl border border-primary/5 space-y-3 group hover:bg-accent transition-colors">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm group-hover:scale-110 transition-transform">
-                  <Sun size={20} />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Avant 15h</p>
-                  <p className="font-bold text-gray-900">Livré 18h - 20h</p>
-                </div>
-              </div>
-
-              <div className="bg-accent/50 p-4 rounded-2xl border border-primary/5 space-y-3 group hover:bg-accent transition-colors">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-primary shadow-sm group-hover:scale-110 transition-transform">
-                  <Moon size={20} />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Après 15h</p>
-                  <p className="font-bold text-primary">Livré Demain</p>
-                </div>
-              </div>
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-6 text-sm font-bold text-[#1E5631] pt-2">
+              <button 
+                onClick={() => setSelectedSlot('matin')}
+                className={cn(
+                  "flex items-center justify-center gap-3 px-6 py-4 rounded-full w-full sm:w-auto transition-all cursor-pointer",
+                  selectedSlot === 'matin' 
+                    ? "bg-stone-100 border-[#1E5631]/30 shadow-md scale-105" 
+                    : "bg-stone-50 border-stone-200 hover:bg-stone-100",
+                  "border"
+                )}
+              >
+                <ScooterIcon className="w-5 h-5 shrink-0" />
+                <span>Avant 10h &rarr; Livré 14h - 17h</span>
+              </button>
+              
+              <button 
+                onClick={() => setSelectedSlot('aprem')}
+                className={cn(
+                  "flex items-center justify-center gap-3 px-6 py-4 rounded-full w-full sm:w-auto transition-all cursor-pointer",
+                  selectedSlot === 'aprem' 
+                    ? "bg-stone-100 border-[#1E5631]/30 shadow-md scale-105" 
+                    : "bg-stone-50 border-stone-200 hover:bg-stone-100",
+                  "border"
+                )}
+              >
+                <ScooterIcon className="w-5 h-5 shrink-0" />
+                <span>Avant 15h &rarr; Livré 18h - 20h</span>
+              </button>
             </div>
           </div>
 
@@ -533,33 +548,38 @@ export const ProductDetail: React.FC = () => {
               </motion.button>
             </div>
             
-            <div className="flex gap-4">
-              <button 
-                onClick={handleWhatsAppOrder}
-                className="flex-[2] bg-[#25D366] text-white py-3 sm:py-4 rounded-xl font-bold flex items-center justify-center gap-2 sm:gap-3 hover:bg-[#128C7E] transition-all shadow-lg shadow-[#25D366]/20 text-sm sm:text-base"
-              >
-                <svg 
-                  viewBox="0 0 24 24" 
-                  width="20" 
-                  height="20" 
-                  fill="currentColor"
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-4">
+                <button 
+                  onClick={handleWhatsAppOrder}
+                  className="flex-[2] bg-[#25D366] text-white py-3 sm:py-4 rounded-xl font-bold flex items-center justify-center gap-2 sm:gap-3 hover:bg-[#128C7E] transition-all shadow-lg shadow-[#25D366]/20 text-sm sm:text-base"
                 >
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-                Commander via WhatsApp
-              </button>
-              <button 
-                onClick={() => setShowShareModal(true)}
-                className="flex-1 bg-white border-2 border-gray-200 text-gray-700 py-3 sm:py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-all text-sm sm:text-base"
-              >
-                <Share2 size={20} />
-                Partager
-              </button>
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    width="20" 
+                    height="20" 
+                    fill="currentColor"
+                  >
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  Commander via WhatsApp
+                </button>
+                <button 
+                  onClick={() => setShowShareModal(true)}
+                  className="flex-1 bg-white border-2 border-gray-200 text-gray-700 py-3 sm:py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-all text-sm sm:text-base"
+                >
+                  <Share2 size={20} />
+                  Partager
+                </button>
+              </div>
+              <div className="flex items-center justify-center gap-1.5 text-[#1E5631] text-xs font-bold mt-1">
+                <ShieldCheck size={14} /> Paiement Sécurisé
+              </div>
             </div>
           </div>
 
           {/* Sticky Mobile Actions - Optimized for visibility */}
-          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-gray-100 p-4 pb-safe shadow-[0_-10px_30px_rgba(0,0,0,0.05)] flex gap-4 animate-in slide-in-from-bottom duration-300">
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[60] bg-white/95 backdrop-blur-md border-t border-gray-100 p-4 pb-safe shadow-[0_-10px_30px_rgba(0,0,0,0.05)] flex gap-4 animate-in slide-in-from-bottom duration-300">
             <button 
               disabled={product.stock === 0}
               onClick={handleAddToCart}
@@ -647,9 +667,15 @@ export const ProductDetail: React.FC = () => {
             </div>
           )}
 
-          <div className="flex gap-4 text-sm font-medium text-gray-500">
-            <div className="flex items-center gap-2">💵 Cash à la livraison</div>
-            <div className="flex items-center gap-2">📱 Orange Money</div>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 text-sm font-bold text-[#1E5631]">
+            <div className="flex items-center justify-center gap-4 bg-stone-50 border border-stone-200 px-6 py-4 rounded-2xl w-full sm:w-auto">
+              <Wallet size={22} color="#1E5631" strokeWidth={1.5} className="shrink-0" />
+              <span>Payer Cash à la livraison</span>
+            </div>
+            <div className="flex items-center justify-center gap-4 bg-stone-50 border border-stone-200 px-6 py-4 rounded-2xl w-full sm:w-auto">
+              <Smartphone size={22} color="#EF6C00" strokeWidth={1.5} className="shrink-0" />
+              <span>Paiement via <span className="text-[#EF6C00] font-black tracking-tight">Orange Money</span></span>
+            </div>
           </div>
         </div>
       </div>

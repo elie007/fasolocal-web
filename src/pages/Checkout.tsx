@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, ArrowLeft, Phone, MapPin, Wallet, Truck, User as UserIcon } from 'lucide-react';
+import { CheckCircle2, ArrowLeft, Phone, MapPin, Wallet, Truck, User as UserIcon, Smartphone } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice, cn } from '../lib/utils';
 import { DELIVERY_FEES, FREE_DELIVERY_THRESHOLD } from '../constants';
@@ -163,31 +163,49 @@ export const Checkout: React.FC = () => {
                 <Wallet size={20} className="text-primary" /> Mode de paiement
               </h2>
               <div className="grid grid-cols-1 gap-4">
-                {[
-                  { id: 'cash', label: '💵 Cash à la livraison', desc: 'Payez en espèces quand vous recevez vos produits.' },
-                  { id: 'orange', label: '📱 Orange Money à la livraison', desc: 'Faites le transfert au livreur sur place.' },
-                  { id: 'moov', label: '📱 Moov Money à la livraison', desc: 'Faites le transfert au livreur sur place.' },
-                ].map((method) => (
-                  <label 
-                    key={method.id}
-                    className={cn(
-                      "flex items-start gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all",
-                      formData.paymentMethod === method.id ? "border-primary bg-accent" : "border-gray-100 hover:border-gray-200"
-                    )}
-                  >
-                    <input 
-                      type="radio" 
-                      name="payment" 
-                      className="mt-1 accent-primary"
-                      checked={formData.paymentMethod === method.id}
-                      onChange={() => setFormData({...formData, paymentMethod: method.id})}
-                    />
-                    <div>
-                      <p className="font-bold">{method.label}</p>
-                      <p className="text-sm text-gray-500">{method.desc}</p>
+                <label 
+                  className={cn(
+                    "flex items-center gap-4 px-6 py-4 rounded-2xl border cursor-pointer transition-all",
+                    formData.paymentMethod === 'cash' ? "border-[#1E5631] bg-stone-50 ring-1 ring-[#1E5631]" : "border-stone-200 bg-stone-50 hover:border-gray-300"
+                  )}
+                >
+                  <input 
+                    type="radio" 
+                    name="payment" 
+                    className="w-5 h-5 accent-[#1E5631]"
+                    checked={formData.paymentMethod === 'cash'}
+                    onChange={() => setFormData({...formData, paymentMethod: 'cash'})}
+                  />
+                  <div className="flex items-center gap-4 flex-1">
+                    <Wallet size={24} color="#1E5631" strokeWidth={1.5} className="shrink-0" />
+                    <div className="flex flex-col">
+                      <span className="font-bold text-[#1E5631]">Payer Cash à la livraison</span>
+                      <span className="text-xs text-gray-500">Payez en espèces quand vous recevez vos produits.</span>
                     </div>
-                  </label>
-                ))}
+                  </div>
+                </label>
+
+                <label 
+                  className={cn(
+                    "flex items-center gap-4 px-6 py-4 rounded-2xl border cursor-pointer transition-all",
+                    formData.paymentMethod === 'orange' ? "border-[#EF6C00] bg-stone-50 ring-1 ring-[#EF6C00]" : "border-stone-200 bg-stone-50 hover:border-gray-300"
+                  )}
+                >
+                  <input 
+                    type="radio" 
+                    name="payment" 
+                    className="w-5 h-5 accent-[#EF6C00]"
+                    checked={formData.paymentMethod === 'orange'}
+                    onChange={() => setFormData({...formData, paymentMethod: 'orange'})}
+                  />
+                  <div className="flex items-center gap-4 flex-1">
+                    <Smartphone size={24} color="#EF6C00" strokeWidth={1.5} className="shrink-0" />
+                    <div className="flex flex-col">
+                      <span className="font-bold text-[#1E5631]">Paiement via <span className="text-[#EF6C00] font-black tracking-tight">Orange Money</span></span>
+                      <span className="text-xs text-gray-500">Faites le transfert au livreur sur place.</span>
+                    </div>
+                  </div>
+                </label>
               </div>
             </div>
 

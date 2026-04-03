@@ -76,7 +76,7 @@ export const BecomeSeller: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      await addDoc(collection(db, 'seller_applications'), {
+      await addDoc(collection(db, 'candidatures_producteurs'), {
         ...formData,
         createdAt: serverTimestamp(),
         status: 'pending'

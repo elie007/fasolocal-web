@@ -61,7 +61,8 @@ service cloud.firestore {
              data.productId is string && data.productId.size() > 0 &&
              data.userName is string && data.userName.size() > 0 && data.userName.size() < 100 &&
              data.rating is number && data.rating >= 1 && data.rating <= 5 &&
-             data.comment is string && data.comment.size() > 0 && data.comment.size() < 1000;
+             data.comment is string && data.comment.size() > 0 && data.comment.size() < 1000 &&
+             data.createdAt is timestamp;
     }
 
     // Global Rules

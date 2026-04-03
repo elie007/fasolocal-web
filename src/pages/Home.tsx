@@ -5,6 +5,7 @@ import { ArrowRight, Truck, ShieldCheck, Star, ShoppingBag, Clock, Award, Loader
 import { PRODUITS as STATIC_PRODUITS, Produit, Categorie, OFFICIAL_CATEGORIES } from '../data';
 import { PRODUCTEURS, BLOG_POSTS } from '../constants';
 import { ProductCard } from '../components/ProductCard';
+import { HomeCarousel } from '../components/HomeCarousel';
 import { getProduits, getCategories, listenProduits, listenCategories } from '../services/firestoreService';
 import { seedDatabase } from '../services/seedService';
 import { useAuth } from '../context/AuthContext';
@@ -102,40 +103,11 @@ export const Home: React.FC = () => {
   return (
     <div className="space-y-16 md:space-y-24 pb-20">
       <div className="space-y-0">
-        {/* Hero Section */}
-        <section className="relative min-h-[350px] py-12 md:py-16 flex items-center overflow-hidden z-10">
-        <div className="absolute inset-0 z-0">
-          <div className="w-full h-full bg-primary-dark" />
-          <div className="absolute inset-0 bg-primary/70" />
-        </div>
-
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-white w-full text-center pt-8 md:pt-12 pb-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-4xl mx-auto space-y-4 md:space-y-6"
-          >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight font-serif text-white drop-shadow-lg">
-              Le meilleur du terroir burkinabè, livré chez vous.
-            </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-2xl mx-auto font-medium">
-              Découvrez des produits naturels, transformés avec soin par nos producteurs locaux.
-            </p>
-            <div className="flex justify-center pt-4 md:pt-6">
-              <Link 
-                to="/boutique" 
-                className="bg-white text-secondary px-10 py-4 md:py-5 rounded-full font-bold text-lg md:text-xl flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-2xl"
-              >
-                Voir la boutique <ArrowRight size={24} />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+        {/* Carousel / Hero Section */}
+        <HomeCarousel />
 
       {/* Trust Banner */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 -mt-8 sm:-mt-12">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 mt-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 py-8 sm:py-10 bg-white rounded-3xl shadow-xl border border-gray-100">
           {[
             { icon: <Truck className="text-secondary" size={28} />, title: "Livraison à Ouagadougou" },

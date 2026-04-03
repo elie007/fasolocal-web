@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Trash2, Minus, Plus, ArrowRight, ShoppingBag, Package } from 'lucide-react';
+import { Trash2, Minus, Plus, ArrowRight, ShoppingBag, Package, Wallet, Smartphone } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatPrice, cn } from '../lib/utils';
 import { FREE_DELIVERY_THRESHOLD } from '../constants';
@@ -126,8 +126,15 @@ export const CartPage: React.FC = () => {
               </div>
               
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-sm text-primary font-medium bg-accent p-3 rounded-lg justify-center">
-                  <span>💵 Paiement à la livraison</span>
+                <div className="flex flex-col gap-3 text-sm font-bold text-[#1E5631]">
+                  <div className="flex items-center justify-center gap-3 bg-stone-50 border border-stone-200 px-4 py-3 rounded-xl w-full">
+                    <Wallet size={20} color="#1E5631" strokeWidth={1.5} className="shrink-0" />
+                    <span>Payer Cash à la livraison</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 bg-stone-50 border border-stone-200 px-4 py-3 rounded-xl w-full">
+                    <Smartphone size={20} color="#EF6C00" strokeWidth={1.5} className="shrink-0" />
+                    <span>Paiement via <span className="text-[#EF6C00] font-black tracking-tight">Orange Money</span></span>
+                  </div>
                 </div>
                 <button 
                   onClick={() => navigate('/commande')}
