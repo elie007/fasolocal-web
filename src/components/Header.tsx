@@ -41,11 +41,26 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    
+    // Si on est sur la page boutique, on met à jour l'URL en temps réel
+    if (location.pathname === '/boutique') {
+      const searchParams = new URLSearchParams(location.search);
+      if (val.trim()) {
+        searchParams.set('q', val.trim());
+      } else {
+        searchParams.delete('q');
+      }
+      navigate(`/boutique?${searchParams.toString()}`, { replace: true });
+    }
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/boutique?q=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
       setIsSearchFocused(false);
     }
   };
@@ -121,7 +136,7 @@ export const Header: React.FC = () => {
               ref={searchInputRef}
               type="text" 
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
               placeholder="Rechercher un produit..." 
@@ -320,7 +335,7 @@ export const Header: React.FC = () => {
                 autoFocus
                 type="text" 
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 placeholder="Rechercher un produit..." 
                 className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-gray-50 border border-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
@@ -368,7 +383,7 @@ export const Header: React.FC = () => {
             <input 
               type="text" 
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
               placeholder="Chercher du soumbala..." 
               className="w-full pl-10 pr-10 py-3 rounded-xl bg-accent text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />

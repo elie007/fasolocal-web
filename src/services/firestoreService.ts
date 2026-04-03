@@ -276,3 +276,26 @@ export const updateProduit = async (id: string, updates: Partial<Produit>) => {
     throw error;
   }
 };
+
+/**
+ * Recherche des produits par nom (recherche par préfixe)
+ * Note: Firestore ne supporte pas nativement la recherche "contains".
+ * Pour une recherche plus avancée, un service tiers comme Algolia est recommandé.
+ */
+export const searchProduits = async (searchTerm: string): Promise<Produit[]> => {
+  try {
+    if (!searchTerm.trim()) return getProduits();
+    
+    const q = query(
+      collection(db, 'produits'),
+      where('nom', '>=', searchTerm),
+      where('nom', '<=', searchTerm + '\uf8ff')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(mapProduit);
+  } catch (error) {
+    console.error("Erreur lors de la recherche des produits:", error);
+    return [];
+  }
+};

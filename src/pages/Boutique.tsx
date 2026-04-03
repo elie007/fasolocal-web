@@ -7,9 +7,11 @@ import { cn } from '../lib/utils';
 import { listenProduits } from '../services/firestoreService';
 
 export const Boutique: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialCategory = searchParams.get('category') || 'Tout';
+  const initialSearch = searchParams.get('q') || '';
   const [categorieActive, setCategorieActive] = useState<string>(initialCategory);
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
   const [produits, setProduits] = useState<Produit[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,21 +30,54 @@ export const Boutique: React.FC = () => {
 
   useEffect(() => {
     const category = searchParams.get('category');
+    const q = searchParams.get('q');
+    
     if (category) {
       setCategorieActive(category === 'toutes' ? 'Tout' : category);
     }
+    if (q !== null) {
+      setSearchQuery(q);
+    }
   }, [searchParams]);
 
-  const produitsFiltrés = useMemo(() => {
-    if (categorieActive === 'Tout') {
-      return produits;
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    
+    // Update URL search params without full navigation
+    const newParams = new URLSearchParams(searchParams);
+    if (val) {
+      newParams.set('q', val);
+    } else {
+      newParams.delete('q');
     }
-    return produits.filter(p => {
-      const catId = (p.categorie_id || '').toLowerCase();
-      const active = categorieActive.toLowerCase();
-      return catId.includes(active) || active.includes(catId);
-    });
-  }, [categorieActive, produits]);
+    setSearchParams(newParams, { replace: true });
+  };
+
+  const produitsFiltrés = useMemo(() => {
+    let filtered = produits;
+
+    // Filter by Category
+    if (categorieActive !== 'Tout') {
+      filtered = filtered.filter(p => {
+        const catId = (p.categorie_id || '').toLowerCase();
+        const active = categorieActive.toLowerCase();
+        return catId.includes(active) || active.includes(catId);
+      });
+    }
+
+    // Filter by Search Query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(p => 
+        (p.nom || '').toLowerCase().includes(q) ||
+        (p.description || '').toLowerCase().includes(q) ||
+        (p.vendeur || '').toLowerCase().includes(q)
+      );
+    }
+
+    return filtered;
+  }, [categorieActive, searchQuery, produits]);
 
   if (loading) {
     return (
@@ -88,13 +123,27 @@ export const Boutique: React.FC = () => {
 
         {/* Grille de produits */}
         <main className="flex-1">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
-              {OFFICIAL_CATEGORIES.find(c => c.id === categorieActive)?.label || 'Tous nos produits'}
-            </h1>
-            <p className="text-gray-500 mt-2">
-              Découvrez le meilleur du terroir burkinabè.
-            </p>
+          <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {OFFICIAL_CATEGORIES.find(c => c.id === categorieActive)?.label || 'Tous nos produits'}
+              </h1>
+              <p className="text-gray-500 mt-2">
+                Découvrez le meilleur du terroir burkinabè.
+              </p>
+            </div>
+
+            {/* Barre de recherche locale */}
+            <div className="relative w-full md:w-72">
+              <input 
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Chercher un produit..."
+                className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white border border-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary shadow-sm transition-all"
+              />
+              <Filter size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            </div>
           </div>
 
           {produitsFiltrés.length > 0 ? (
@@ -104,13 +153,23 @@ export const Boutique: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-              <p className="text-gray-500 font-medium">Aucun produit trouvé dans cette catégorie.</p>
+            <div className="text-center py-24 bg-white rounded-[3rem] border border-gray-100 shadow-sm">
+              <div className="w-20 h-20 bg-accent/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Filter size={32} className="text-primary" />
+              </div>
+              <h3 className="text-xl font-bold text-primary mb-2">Désolé, ce produit n'est pas encore disponible.</h3>
+              <p className="text-gray-500 max-w-xs mx-auto">
+                Nous travaillons chaque jour avec nos producteurs pour enrichir notre catalogue.
+              </p>
               <button 
-                onClick={() => setCategorieActive('Tout')}
-                className="mt-4 text-primary font-bold hover:underline"
+                onClick={() => {
+                  setCategorieActive('Tout');
+                  setSearchQuery('');
+                  setSearchParams({});
+                }}
+                className="mt-8 px-8 py-3 bg-primary text-white rounded-full font-bold hover:bg-primary-dark transition-all shadow-lg shadow-primary/20"
               >
-                Voir tous les produits
+                Voir tout le catalogue
               </button>
             </div>
           )}
