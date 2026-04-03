@@ -63,23 +63,23 @@ export const Boutique: React.FC = () => {
               Catégories
             </h2>
             
-            <nav className="space-y-2">
+            <nav className="grid grid-cols-2 gap-3 md:flex md:flex-col md:gap-0 md:space-y-2">
               {OFFICIAL_CATEGORIES.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => setCategorieActive(cat.id)}
                   className={cn(
-                    "w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-all",
+                    "w-full flex flex-col md:flex-row items-center justify-center md:justify-between p-3 md:px-4 md:py-3 rounded-xl text-sm font-bold transition-all border md:border-transparent",
                     categorieActive === cat.id
-                      ? "bg-primary text-white shadow-lg shadow-primary/20"
-                      : "text-gray-600 hover:bg-accent hover:text-primary"
+                      ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
+                      : "bg-white border-gray-200 text-gray-600 hover:bg-accent hover:text-primary md:bg-transparent"
                   )}
                 >
-                  <span className="flex items-center gap-2">
-                    <span>{cat.icon}</span>
-                    <span>{cat.label}</span>
+                  <span className="flex flex-col md:flex-row items-center gap-1 md:gap-2 text-center md:text-left">
+                    <span className="text-2xl md:text-base">{cat.icon}</span>
+                    <span className="text-xs md:text-sm leading-tight">{cat.label}</span>
                   </span>
-                  <ChevronRight size={16} className={cn(categorieActive === cat.id ? "opacity-100" : "opacity-0")} />
+                  <ChevronRight size={16} className={cn("hidden md:block", categorieActive === cat.id ? "opacity-100" : "opacity-0")} />
                 </button>
               ))}
             </nav>
