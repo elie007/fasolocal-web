@@ -88,8 +88,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Badges */}
         <div className="absolute top-2 left-2 flex flex-col gap-1 z-20">
           {product.isBestSeller && (
-            <div className="bg-secondary text-primary-dark text-[10px] sm:text-xs font-black px-2 py-1 rounded-full shadow-lg">
-              BEST-SELLER
+            <div className="bg-secondary text-primary-dark text-[10px] sm:text-xs font-semibold px-2 py-1 rounded-full shadow-lg">
+              Populaire 🔥
             </div>
           )}
           {(product as any).isValidated && (
@@ -101,7 +101,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         
         {/* Format Badge (Top Right) */}
         {formatBadge && (
-          <div className="absolute top-2 right-2 bg-[#F5A623] text-white text-[12px] font-sans font-bold px-3 py-1 rounded-full shadow-md z-20">
+          <div className="absolute top-2 right-2 bg-yellow-400/70 text-black text-[12px] font-sans font-bold px-3 py-1 rounded-full shadow-md z-20 scale-90 origin-top-right">
             {formatBadge}
           </div>
         )}
