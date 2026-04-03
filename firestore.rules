@@ -30,6 +30,14 @@ service cloud.firestore {
     //   - message: string (required)
     //   - createdAt: timestamp (required)
     //
+    // Collection: product_reviews
+    // Fields:
+    //   - productId: string (required)
+    //   - userName: string (required)
+    //   - rating: number (required, 1-5)
+    //   - comment: string (required)
+    //   - createdAt: timestamp (required)
+    //
     // ===============================================================
 
     // Helper Functions
@@ -42,6 +50,18 @@ service cloud.firestore {
       return isAuthenticated() && 
              request.auth.token.email == "wilfreidelie@gmail.com" && 
              request.auth.token.email_verified == true;
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidReview(data) {
+      return hasOnlyAllowedFields(['productId', 'userName', 'rating', 'comment', 'createdAt']) &&
+             data.productId is string && data.productId.size() > 0 &&
+             data.userName is string && data.userName.size() > 0 && data.userName.size() < 100 &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.comment is string && data.comment.size() > 0 && data.comment.size() < 1000;
     }
 
     // Global Rules
@@ -75,6 +95,12 @@ service cloud.firestore {
     match /config_logistique/{id} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    match /product_reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isValidReview(request.resource.data);
+      allow update, delete: if isAdmin();
     }
   }
 }
