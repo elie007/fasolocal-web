@@ -1,0 +1,80 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // This security rules file assumes the following data structures:
+    //
+    // Collection: produits
+    // Fields:
+    //   - nom: string (required)
+    //   - prix: number (required)
+    //   - unite: string (optional)
+    //   - description: string (optional)
+    //   - categorie_id: string (required)
+    //   - image: string (optional)
+    //   - isBestSeller: bool (optional)
+    //
+    // Collection: categories
+    // Fields:
+    //   - nom: string (required)
+    //   - icon: string (optional)
+    //
+    // Collection: contact_messages
+    // Fields:
+    //   - name: string (required)
+    //   - whatsapp: string (required)
+    //   - subject: string (required)
+    //   - message: string (required)
+    //   - createdAt: timestamp (required)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      // Only wilfreidelie@gmail.com can write products, categories, and config
+      return isAuthenticated() && 
+             request.auth.token.email == "wilfreidelie@gmail.com" && 
+             request.auth.token.email_verified == true;
+    }
+
+    // Global Rules
+    match /{document=**} {
+      // Public read access as requested
+      allow read: if true;
+      
+      // Write access restricted to the admin email by default
+      allow write: if isAdmin();
+    }
+
+    // Specific rules for public submissions
+    match /users/{userId} {
+      // Allow users to create their own profile or update it if they are the owner
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isAuthenticated() && request.auth.uid == userId;
+      allow read: if true;
+    }
+
+    match /candidatures_producteurs/{id} {
+      // Allow anyone to apply to become a producer
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /contact_messages/{messageId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /config_logistique/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

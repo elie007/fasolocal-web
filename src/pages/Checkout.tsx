@@ -1,0 +1,258 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CheckCircle2, ArrowLeft, Phone, MapPin, Wallet, Truck, User as UserIcon } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+import { formatPrice, cn } from '../lib/utils';
+import { DELIVERY_FEES, FREE_DELIVERY_THRESHOLD } from '../constants';
+
+export const Checkout: React.FC = () => {
+  const { cart, totalPrice, clearCart } = useCart();
+  const navigate = useNavigate();
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    whatsapp: '',
+    city: 'Ouagadougou',
+    neighborhood: '',
+    landmark: '',
+    paymentMethod: 'cash',
+    note: ''
+  });
+
+  const deliveryFee = totalPrice >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEES['Ouagadougou Centre'];
+  const finalTotal = totalPrice + deliveryFee;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In a real app, we would send this to a backend
+    setIsSubmitted(true);
+    setTimeout(() => {
+      clearCart();
+    }, 100);
+  };
+
+  if (isSubmitted) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-20 text-center space-y-8">
+        <div className="w-24 h-24 bg-accent rounded-full flex items-center justify-center mx-auto text-primary">
+          <CheckCircle2 size={64} />
+        </div>
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold font-serif text-primary">✅ Commande reçue !</h1>
+          <p className="text-xl text-gray-600">
+            Merci de soutenir nos producteurs burkinabè ! 🇧🇫
+          </p>
+          <p className="bg-accent p-6 rounded-2xl text-primary font-medium">
+            Vous recevrez une confirmation WhatsApp dans les 30 minutes.
+          </p>
+        </div>
+        <button 
+          onClick={() => navigate('/')}
+          className="bg-secondary text-primary-dark px-10 py-4 rounded-full font-bold hover:bg-[#E59512] transition-all shadow-lg shadow-secondary/20"
+        >
+          Retour à l'accueil
+        </button>
+      </div>
+    );
+  }
+
+  if (cart.length === 0) {
+    navigate('/panier');
+    return null;
+  }
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+      <button 
+        onClick={() => navigate('/panier')}
+        className="flex items-center gap-2 text-primary font-bold mb-8 hover:underline"
+      >
+        <ArrowLeft size={20} /> Retour au panier
+      </button>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        {/* Form */}
+        <div className="space-y-10">
+          <h1 className="text-4xl font-bold font-serif">Finaliser ma commande</h1>
+          
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-6">
+              <h2 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
+                <UserIcon size={20} className="text-primary" /> Vos informations
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700">Prénom</label>
+                  <input 
+                    required
+                    type="text" 
+                    className="w-full p-4 rounded-xl bg-white border border-gray-200 focus:ring-2 focus:ring-primary focus:outline-none"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700">Nom</label>
+                  <input 
+                    required
+                    type="text" 
+                    className="w-full p-4 rounded-xl bg-white border border-gray-200 focus:ring-2 focus:ring-primary focus:outline-none"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
+                  <Phone size={16} className="text-[#25D366]" /> Votre WhatsApp
+                </label>
+                <input 
+                  required
+                  type="tel" 
+                  placeholder="+226 ..."
+                  className="w-full p-4 rounded-xl bg-white border border-gray-200 focus:ring-2 focus:ring-primary focus:outline-none"
+                  value={formData.whatsapp}
+                  onChange={(e) => setFormData({...formData, whatsapp: e.target.value})}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <h2 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
+                <MapPin size={20} className="text-primary" /> Adresse de livraison
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700">Ville</label>
+                  <select 
+                    className="w-full p-4 rounded-xl bg-white border border-gray-200 focus:ring-2 focus:ring-primary focus:outline-none"
+                    value={formData.city}
+                    onChange={(e) => setFormData({...formData, city: e.target.value})}
+                  >
+                    <option value="Ouagadougou">Ouagadougou</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-700">Quartier</label>
+                  <input 
+                    required
+                    type="text" 
+                    placeholder="Ex: Pissy, Dassasgho..."
+                    className="w-full p-4 rounded-xl bg-white border border-gray-200 focus:ring-2 focus:ring-primary focus:outline-none"
+                    value={formData.neighborhood}
+                    onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700">Repère pour le livreur</label>
+                <textarea 
+                  rows={2}
+                  placeholder="Ex: À côté de la pharmacie, portail vert..."
+                  className="w-full p-4 rounded-xl bg-white border border-gray-200 focus:ring-2 focus:ring-primary focus:outline-none"
+                  value={formData.landmark}
+                  onChange={(e) => setFormData({...formData, landmark: e.target.value})}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <h2 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
+                <Wallet size={20} className="text-primary" /> Mode de paiement
+              </h2>
+              <div className="grid grid-cols-1 gap-4">
+                {[
+                  { id: 'cash', label: '💵 Cash à la livraison', desc: 'Payez en espèces quand vous recevez vos produits.' },
+                  { id: 'orange', label: '📱 Orange Money à la livraison', desc: 'Faites le transfert au livreur sur place.' },
+                  { id: 'moov', label: '📱 Moov Money à la livraison', desc: 'Faites le transfert au livreur sur place.' },
+                ].map((method) => (
+                  <label 
+                    key={method.id}
+                    className={cn(
+                      "flex items-start gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all",
+                      formData.paymentMethod === method.id ? "border-primary bg-accent" : "border-gray-100 hover:border-gray-200"
+                    )}
+                  >
+                    <input 
+                      type="radio" 
+                      name="payment" 
+                      className="mt-1 accent-primary"
+                      checked={formData.paymentMethod === method.id}
+                      onChange={() => setFormData({...formData, paymentMethod: method.id})}
+                    />
+                    <div>
+                      <p className="font-bold">{method.label}</p>
+                      <p className="text-sm text-gray-500">{method.desc}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <button 
+              type="submit"
+              className="w-full bg-secondary text-primary-dark py-5 rounded-2xl font-bold text-xl shadow-xl shadow-secondary/20 hover:bg-[#E59512] transition-all"
+            >
+              Confirmer ma commande
+            </button>
+          </form>
+        </div>
+
+        {/* Order Summary */}
+        <div className="lg:sticky lg:top-32 h-fit">
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-8">
+            <h2 className="text-2xl font-bold font-serif">Ma commande</h2>
+            
+            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+              {cart.map(item => (
+                <div key={item.id} className="flex justify-between items-center gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-gray-50">
+                      <img 
+                        src={item.image_url || item.photo || "/logo-placeholder.png"} 
+                        alt="" 
+                        loading="lazy"
+                        className="w-full h-full object-cover" 
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "/logo-placeholder.png";
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm line-clamp-2">{item.nom}</p>
+                      <p className="text-xs text-gray-500">Qté: {item.quantity}</p>
+                    </div>
+                  </div>
+                  <span className="font-bold text-sm">{formatPrice(item.prix * item.quantity)}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="border-t border-gray-100 pt-6 space-y-4">
+              <div className="flex justify-between text-gray-600">
+                <span>Sous-total</span>
+                <span className="font-bold text-gray-900">{formatPrice(totalPrice)}</span>
+              </div>
+              <div className="flex justify-between text-gray-600">
+                <span className="flex items-center gap-2"><Truck size={16} /> Livraison</span>
+                <span className="font-bold text-gray-900">{deliveryFee === 0 ? "Gratuite" : formatPrice(deliveryFee)}</span>
+              </div>
+              <div className="flex justify-between items-end pt-4 border-t border-gray-100">
+                <span className="text-lg font-bold">Total à payer</span>
+                <span className="text-3xl font-bold text-secondary">{formatPrice(finalTotal)}</span>
+              </div>
+            </div>
+
+            <div className="bg-accent p-4 rounded-2xl text-xs text-primary leading-relaxed">
+              <p className="font-bold mb-1">🌿 Information importante</p>
+              <p>Aucun paiement n'est requis maintenant. Vous paierez directement au livreur lors de la réception de vos produits.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

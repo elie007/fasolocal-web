@@ -1,0 +1,78 @@
+{
+  "entities": {
+    "Produit": {
+      "title": "Produit",
+      "description": "Un produit local burkinabè",
+      "type": "object",
+      "properties": {
+        "nom": { "type": "string", "description": "Nom du produit" },
+        "prix": { "type": "number", "description": "Prix en FCFA" },
+        "photo": { "type": "string", "description": "URL de l'image" },
+        "vendeur": { "type": "string", "description": "Nom du vendeur/producteur" },
+        "description": { "type": "string", "description": "Description détaillée" },
+        "categorie_id": { "type": "string", "description": "ID de la catégorie" },
+        "isBestSeller": { "type": "boolean", "description": "Si c'est un best-seller" },
+        "isValidated": { "type": "boolean", "description": "Si le produit est validé (Terroir & Qualité)" }
+      },
+      "required": ["nom", "prix", "photo", "categorie_id"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Un client de FasoLocal",
+      "type": "object",
+      "properties": {
+        "nom": { "type": "string", "description": "Nom complet" },
+        "telephone": { "type": "string", "description": "Numéro WhatsApp" },
+        "quartier": { "type": "string", "description": "Quartier à Ouagadougou" },
+        "email": { "type": "string", "description": "Email de l'utilisateur" },
+        "role": { "type": "string", "description": "Rôle (client, admin)" }
+      },
+      "required": ["nom", "telephone", "quartier"]
+    },
+    "CandidatureProducteur": {
+      "title": "CandidatureProducteur",
+      "description": "Candidature d'un producteur",
+      "type": "object",
+      "properties": {
+        "nom": { "type": "string", "description": "Nom ou Coopérative" },
+        "ville": { "type": "string", "description": "Ville (Ouaga, Bobo, Koudougou)" },
+        "specialite": { "type": "string", "description": "Spécialité (Miel, Karité, etc.)" },
+        "histoire": { "type": "string", "description": "Histoire du producteur" },
+        "status": { "type": "string", "description": "Statut (en_attente, valide, refuse)" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nom", "ville", "specialite"]
+    },
+    "ConfigLogistique": {
+      "title": "ConfigLogistique",
+      "description": "Configuration des frais de livraison",
+      "type": "object",
+      "properties": {
+        "fraisLivraison": { "type": "number", "description": "Frais de livraison par défaut" },
+        "seuilGratuite": { "type": "number", "description": "Seuil pour livraison gratuite" }
+      }
+    }
+  },
+  "firestore": {
+    "/produits/{produitId}": {
+      "schema": "Produit",
+      "description": "Collection des produits"
+    },
+    "/categories/{categorieId}": {
+      "schema": "Categorie",
+      "description": "Collection des catégories"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection des utilisateurs"
+    },
+    "/candidatures_producteurs/{id}": {
+      "schema": "CandidatureProducteur",
+      "description": "Candidatures des producteurs"
+    },
+    "/config_logistique/{id}": {
+      "schema": "ConfigLogistique",
+      "description": "Configuration logistique unique"
+    }
+  }
+}
