@@ -116,6 +116,20 @@ export const Boutique: React.FC = () => {
           )}
         </main>
       </div>
+
+      {/* Seller CTA */}
+      <div className="mt-24 p-12 bg-accent/30 rounded-[3rem] border border-primary/5 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="space-y-2 text-center md:text-left">
+          <h3 className="text-2xl font-bold font-serif text-gray-900">Vous êtes producteur ? 🌿</h3>
+          <p className="text-gray-600">Rejoignez FasoLocal et vendez vos produits à des milliers de clients.</p>
+        </div>
+        <button 
+          onClick={() => window.location.href = '/devenir-vendeur'}
+          className="bg-primary text-white px-10 py-4 rounded-2xl font-bold hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 whitespace-nowrap"
+        >
+          Commencer à vendre
+        </button>
+      </div>
     </div>
   );
 };

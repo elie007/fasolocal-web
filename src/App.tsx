@@ -23,7 +23,6 @@ import { Blog } from './pages/Blog';
 import { BlogPost } from './pages/BlogPost';
 import { SellerDashboard } from './pages/SellerDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
-import { BecomeProducer } from './pages/BecomeProducer';
 import { Toaster } from 'sonner';
 import { seedTestProducts } from './services/seedData';
 
@@ -67,7 +66,7 @@ export default function App() {
                 <Route path="/blog/:id" element={<BlogPost />} />
                 <Route path="/tableau-de-bord" element={<SellerDashboard />} />
                 <Route path="/admin-fasolocal" element={<AdminDashboard />} />
-                <Route path="/devenir-producteur" element={<BecomeProducer />} />
+                <Route path="/devenir-producteur" element={<BecomeSeller />} />
               </Routes>
             </main>
             <Footer />

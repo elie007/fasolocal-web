@@ -43,8 +43,8 @@ export const Footer: React.FC = () => {
               <li><Link to="/a-propos" className="hover:text-secondary transition-colors">À propos</Link></li>
               <li><Link to="/contact" className="hover:text-secondary transition-colors">Contact</Link></li>
               <li className="pt-4 border-t border-white/10">
-                <Link to="/devenir-producteur" className="text-secondary font-bold hover:underline transition-colors">
-                  Devenir Producteur 🇧🇫
+                <Link to="/devenir-vendeur" className="text-secondary font-bold hover:underline transition-colors">
+                  Vendre sur FasoLocal 🇧🇫
                 </Link>
               </li>
             </ul>
