@@ -3,9 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FasoLocal - La première marketplace de produits locaux</title>
+    <title>FasoLocal | La 1ère Marketplace de Produits Locaux au Burkina Faso</title>
+    <meta name="description" content="Découvrez le meilleur du terroir burkinabè : nutrition infantile, céréales, épices et produits naturels. Livraison rapide à Ouagadougou. Soutenez nos producteurs locaux !" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
+    
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "FasoLocal",
+        "url": "https://fasolocal.com",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://fasolocal.com/boutique?search={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "FasoLocal",
+        "url": "https://fasolocal.com",
+        "logo": "https://fasolocal.com/favicon.svg",
+        "description": "La 1ère Marketplace de Produits Locaux au Burkina Faso",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Ouagadougou",
+          "addressCountry": "BF"
+        },
+        "sameAs": [
+          "https://facebook.com/fasolocal",
+          "https://instagram.com/fasolocal"
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -120,10 +120,10 @@ export const Home: React.FC = () => {
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20 mt-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 py-8 sm:py-10 bg-white rounded-3xl shadow-xl border border-gray-100">
           {[
-            { icon: <Truck className="text-secondary" size={28} />, title: "Livraison à Ouagadougou" },
-            { icon: <ShieldCheck className="text-secondary" size={28} />, title: "Producteurs certifiés FasoLocal" },
-            { icon: <Award className="text-secondary" size={28} />, title: "100% Made in Burkina" },
-            { icon: <ShoppingBag className="text-secondary" size={28} />, title: "Commande en 3 minutes" },
+            { icon: <Truck className="text-secondary" size={28} aria-hidden="true" />, title: "Livraison à Ouagadougou" },
+            { icon: <ShieldCheck className="text-secondary" size={28} aria-hidden="true" />, title: "Producteurs certifiés FasoLocal" },
+            { icon: <Award className="text-secondary" size={28} aria-hidden="true" />, title: "100% Made in Burkina" },
+            { icon: <ShoppingBag className="text-secondary" size={28} aria-hidden="true" />, title: "Commande en 3 minutes" },
           ].map((item, i) => (
             <div key={i} className="flex flex-col items-center text-center gap-2 sm:gap-3 px-2 sm:px-4">
               {item.icon}
@@ -136,7 +136,7 @@ export const Home: React.FC = () => {
       {/* Catégories Slider */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mt-[20px] mb-[40px] space-y-2">
-          <h2 className="text-[32px] font-bold font-serif text-[#212121] leading-tight">Explorez le terroir</h2>
+          <h2 className="text-[32px] font-bold font-serif text-[#212121] leading-tight">Nos Catégories Vedettes</h2>
           <p className="text-[18px] font-sans text-[#333333] opacity-80 leading-relaxed">
             Les trésors de nos régions, sélectionnés avec amour et passion pour votre bien-être.
           </p>
@@ -167,7 +167,7 @@ export const Home: React.FC = () => {
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-2xl sm:text-3xl font-bold font-serif">Notre Catalogue</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold font-serif">Les Nouveautés du Terroir</h2>
             <p className="text-gray-600 text-sm sm:text-base">Les meilleurs produits locaux sélectionnés pour vous</p>
           </div>
           <Link to="/boutique" className="text-primary font-bold text-sm flex items-center gap-1 hover:underline whitespace-nowrap">
@@ -196,7 +196,7 @@ export const Home: React.FC = () => {
       <section className="bg-primary/5 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16">
           <div className="text-center max-w-3xl mx-auto space-y-4">
-            <h2 className="text-3xl sm:text-4xl font-bold font-serif">Comment ça marche ?</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold font-serif">Pourquoi choisir FasoLocal ?</h2>
             <p className="text-gray-600 text-sm sm:text-base italic">"C'est simple comme bonjour, livré direct chez toi !"</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
@@ -309,7 +309,7 @@ export const Home: React.FC = () => {
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   src={p.photo || "/logo-placeholder.png"} 
-                  alt={p.nom} 
+                  alt={`Producteur local : ${p.nom} - ${p.specialite}`} 
                   loading="lazy"
                   className="w-full h-full object-cover" 
                   referrerPolicy="no-referrer" 
@@ -343,10 +343,10 @@ export const Home: React.FC = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 text-center">
             {[
-              { label: "Produits", value: "20+", icon: <ShoppingBag className="text-secondary" size={24} /> },
-              { label: "Producteurs", value: "3+", icon: <Users className="text-secondary" size={24} /> },
-              { label: "Villes", value: "Ouaga", icon: <MapPin className="text-secondary" size={24} /> },
-              { label: "Livraison", value: "J+0", icon: <Truck className="text-secondary" size={24} /> },
+              { label: "Produits", value: "20+", icon: <ShoppingBag className="text-secondary" size={24} aria-hidden="true" /> },
+              { label: "Producteurs", value: "3+", icon: <Users className="text-secondary" size={24} aria-hidden="true" /> },
+              { label: "Villes", value: "Ouaga", icon: <MapPin className="text-secondary" size={24} aria-hidden="true" /> },
+              { label: "Livraison", value: "J+0", icon: <Truck className="text-secondary" size={24} aria-hidden="true" /> },
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center space-y-3 sm:space-y-4 group">
                 <div className="p-3 rounded-2xl bg-white/5 group-hover:bg-white/10 transition-colors">
@@ -481,7 +481,7 @@ export const Home: React.FC = () => {
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   src={post.image || "/logo-placeholder.png"} 
-                  alt={post.title}
+                  alt={`Article Blog : ${post.title}`}
                   loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 relative z-10"
                   referrerPolicy="no-referrer"

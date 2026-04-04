@@ -12,9 +12,9 @@ const slides = [
     content: (
       <div className="flex items-center justify-between h-full px-6 md:px-16 relative overflow-hidden">
         <div className="z-10 max-w-lg space-y-4 md:space-y-6">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-serif text-white leading-tight drop-shadow-lg">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-serif text-white leading-tight drop-shadow-lg">
             Le meilleur du terroir burkinabè, livré chez vous.
-          </h2>
+          </h1>
           <p className="text-white text-sm md:text-lg max-w-md font-medium">
             Découvrez des produits naturels, transformés avec soin par nos producteurs locaux.
           </p>
@@ -30,8 +30,9 @@ const slides = [
         <div className="absolute right-[-20px] md:right-10 bottom-0 h-[120%] md:h-[140%] w-2/3 md:w-1/2 flex justify-end items-end translate-y-[10%]">
           <img 
             src="https://images.unsplash.com/photo-1587049352847-4d4b12734185?auto=format&fit=crop&q=80&w=800&transparent=1" 
-            alt="Miel et cire d'abeille" 
+            alt="Produits du terroir burkinabè - Miel et cire d'abeille naturelle" 
             className="object-contain h-full w-full drop-shadow-2xl"
+            loading="eager"
             style={{ filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.5))' }}
           />
         </div>
@@ -70,8 +71,27 @@ const slides = [
               </Link>
             </div>
           </div>
-          <div className="flex-shrink-0 absolute right-4 md:right-16 opacity-80">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#1E5631" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="w-32 h-32 md:w-56 md:h-56">
+          <div className="flex-shrink-0 absolute right-0 bottom-0 top-0 w-1/2 md:w-[45%] opacity-100 pointer-events-none overflow-hidden hidden sm:block">
+            <motion.div 
+              initial={{ x: 100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="h-full w-full relative"
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1595246140625-573b715d11dc?auto=format&fit=crop&q=80&w=1000" 
+                alt="Service de livraison rapide FasoLocal à Ouagadougou" 
+                className="w-full h-full object-cover object-center"
+                loading="lazy"
+                referrerPolicy="no-referrer"
+              />
+              {/* Stronger gradient overlay for perfect blending with white background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FAF9F6] via-[#FAF9F6]/90 to-transparent"></div>
+            </motion.div>
+          </div>
+          {/* Mobile version icon (smaller) */}
+          <div className="sm:hidden flex-shrink-0 absolute right-4 opacity-20">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#1E5631" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="w-24 h-24">
               <circle cx="18" cy="17" r="3"/>
               <circle cx="6" cy="17" r="3"/>
               <path d="M9 17h6"/>

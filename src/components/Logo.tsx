@@ -52,7 +52,11 @@ export const Logo: React.FC<LogoProps> = ({
   };
 
   return (
-    <div className={cn("flex flex-row items-center gap-2 md:gap-4 group", className)}>
+    <div 
+      className={cn("flex flex-row items-center gap-2 md:gap-4 group", className)}
+      role="img"
+      aria-label="Logo FasoLocal - Terroir & Qualité"
+    >
       {/* Original Vector Icon */}
       <div className={cn("relative flex items-center justify-center shrink-0", iconSizeClasses[size])}>
         <svg 

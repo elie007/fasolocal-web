@@ -53,7 +53,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               
               <img 
                 src={photo} 
-                alt={product.nom} 
+                alt={`Produit local : ${product.nom} - ${producteur}`} 
                 loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 relative z-10"
                 referrerPolicy="no-referrer"
