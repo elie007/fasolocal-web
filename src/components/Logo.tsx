@@ -20,7 +20,7 @@ export const Logo: React.FC<LogoProps> = ({
 
   // Colors
   const forestGreen = isMonochrome ? "#FFFFFF" : (isInverted ? "#FFFFFF" : "#1E5631");
-  const orangeOchre = isMonochrome ? "#FFFFFF" : (isInverted ? "#FFFFFF" : "#EF6C00");
+  const orangeOchre = isMonochrome ? "#FFFFFF" : "#EF6C00";
   const stoneGrey = isMonochrome ? "#FFFFFF" : (isInverted ? "#FFFFFF" : "#78716c");
 
   const sizeClasses = {
