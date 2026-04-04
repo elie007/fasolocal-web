@@ -13,7 +13,7 @@ export const Footer: React.FC = () => {
           {/* Brand */}
           <div className="space-y-6">
             <Link to="/">
-              <Logo variant="light" />
+              <Logo variant="inverted" />
             </Link>
             <p className="text-gray-300 leading-relaxed">
               La première marketplace de produits locaux transformés au Burkina Faso. 
@@ -42,6 +42,7 @@ export const Footer: React.FC = () => {
               <li><Link to="/blog" className="hover:text-secondary transition-colors">Blog</Link></li>
               <li><Link to="/a-propos" className="hover:text-secondary transition-colors">À propos</Link></li>
               <li><Link to="/contact" className="hover:text-secondary transition-colors">Contact</Link></li>
+              <li><Link to="/brand-assets" className="hover:text-secondary transition-colors">Brand Assets</Link></li>
               <li className="pt-4 border-t border-white/10">
                 <Link to="/devenir-vendeur" className="text-secondary font-bold hover:underline transition-colors">
                   Vendre sur FasoLocal 🇧🇫

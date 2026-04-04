@@ -102,7 +102,10 @@ export const Boutique: React.FC = () => {
               {OFFICIAL_CATEGORIES.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setCategorieActive(cat.id)}
+                  onClick={() => {
+                    setCategorieActive(cat.id);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   className={cn(
                     "w-full flex flex-col md:flex-row items-center justify-center md:justify-between p-3 md:px-4 md:py-3 rounded-xl text-sm font-bold transition-all border md:border-transparent",
                     categorieActive === cat.id
@@ -166,6 +169,7 @@ export const Boutique: React.FC = () => {
                   setCategorieActive('Tout');
                   setSearchQuery('');
                   setSearchParams({});
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 className="mt-8 px-8 py-3 bg-primary text-white rounded-full font-bold hover:bg-primary-dark transition-all shadow-lg shadow-primary/20"
               >

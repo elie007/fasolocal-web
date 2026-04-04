@@ -95,7 +95,7 @@ export const Header: React.FC = () => {
         {/* Groupe Gauche : Logo */}
         <div className="flex items-center shrink-0">
           <Link to="/" className="hover:opacity-90 transition-opacity">
-            <Logo variant="dark" />
+            <Logo variant="standard" />
           </Link>
         </div>
 
@@ -125,6 +125,10 @@ export const Header: React.FC = () => {
           )}
           <Link to="/a-propos" className="hover:text-primary transition-colors relative group py-2">
             À propos
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+          </Link>
+          <Link to="/brand-assets" className="hover:text-primary transition-colors relative group py-2">
+            Brand Assets
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
           </Link>
         </nav>

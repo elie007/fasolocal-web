@@ -22,6 +22,7 @@ export const Home: React.FC = () => {
   const { user } = useAuth();
   const [isSeeding, setIsSeeding] = useState(false);
   const [nextDelivery, setNextDelivery] = useState('');
+  const [isRaining, setIsRaining] = useState(false);
 
   useEffect(() => {
     const calculateNextSlot = () => {
@@ -33,11 +34,20 @@ export const Home: React.FC = () => {
       } else if (hour < 15) {
         setNextDelivery("aujourd'hui entre 18h et 20h");
       } else {
-        setNextDelivery("demain entre 8h et 12h");
+        setNextDelivery("demain matin");
       }
     };
 
+    const fetchWeather = () => {
+      // Simulation météo : On pourrait utiliser une API réelle ici
+      // Pour la démo, on simule une probabilité de pluie
+      const mockRain = false; // Changez à true pour tester le mode pluie
+      setIsRaining(mockRain);
+    };
+
     calculateNextSlot();
+    fetchWeather();
+    
     const interval = setInterval(calculateNextSlot, 60000);
     return () => clearInterval(interval);
   }, []);
@@ -222,9 +232,23 @@ export const Home: React.FC = () => {
                 On livre partout à Ouagadougou, frais et rapide.
               </p>
             </div>
-            <div className="bg-primary text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-primary/20 animate-pulse flex items-center gap-3">
-              <Clock size={24} />
-              <span>Commandez maintenant pour être livré <span className="underline">{nextDelivery}</span></span>
+            <div className={cn(
+              "px-8 py-4 rounded-2xl font-bold text-lg shadow-lg transition-all duration-500 flex items-center gap-3",
+              isRaining 
+                ? "bg-[#1E5631] border-2 border-[#EF6C00] shadow-[#EF6C00]/20" 
+                : "bg-primary shadow-primary/20 animate-pulse"
+            )}>
+              {isRaining ? <ShieldCheck size={24} className="text-[#EF6C00]" /> : <Clock size={24} />}
+              <div className="flex flex-col">
+                <span className="text-white">
+                  Commandez maintenant pour être livré <span className="underline">{nextDelivery}</span>
+                </span>
+                {isRaining && (
+                  <span className="text-[10px] text-[#EF6C00] uppercase tracking-widest font-black">
+                    ⚠️ Livraison sécurisée : Délai possible dû à la pluie
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

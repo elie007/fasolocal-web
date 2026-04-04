@@ -65,21 +65,26 @@ service cloud.firestore {
              data.createdAt is timestamp;
     }
 
-    // Global Rules
+    // Global Rules - Default deny for safety, then allow specific public reads
     match /{document=**} {
-      // Public read access as requested
-      allow read: if true;
-      
-      // Write access restricted to the admin email by default
+      allow read: if false;
       allow write: if isAdmin();
     }
 
-    // Specific rules for public submissions
+    // Specific rules for public collections
+    match /produits/{produitId} {
+      allow read: if true;
+    }
+
+    match /categories/{categorieId} {
+      allow read: if true;
+    }
+
     match /users/{userId} {
       // Allow users to create their own profile or update it if they are the owner
       allow create: if isAuthenticated() && request.auth.uid == userId;
       allow update: if isAuthenticated() && request.auth.uid == userId;
-      allow read: if true;
+      allow read: if true; // Profile info is often public in marketplaces
     }
 
     match /candidatures_producteurs/{id} {
