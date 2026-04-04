@@ -64,6 +64,32 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["productId", "userName", "rating", "comment"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Une commande client",
+      "type": "object",
+      "properties": {
+        "customer": {
+          "type": "object",
+          "properties": {
+            "firstName": { "type": "string" },
+            "lastName": { "type": "string" },
+            "whatsapp": { "type": "string" },
+            "neighborhood": { "type": "string" },
+            "landmark": { "type": "string" }
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["en_attente", "en_cours", "livre", "annule"] },
+        "paymentMethod": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["customer", "items", "total", "status"]
     }
   },
   "firestore": {
@@ -90,6 +116,10 @@
     "/product_reviews/{reviewId}": {
       "schema": "Review",
       "description": "Collection des avis produits"
+    },
+    "/commandes/{orderId}": {
+      "schema": "Order",
+      "description": "Collection des commandes clients"
     }
   }
 }

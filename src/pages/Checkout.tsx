@@ -4,6 +4,8 @@ import { CheckCircle2, ArrowLeft, Phone, MapPin, Wallet, Truck, User as UserIcon
 import { useCart } from '../context/CartContext';
 import { formatPrice, cn } from '../lib/utils';
 import { DELIVERY_FEES, FREE_DELIVERY_THRESHOLD } from '../constants';
+import { createOrder } from '../services/firestoreService';
+import { toast } from 'sonner';
 
 export const Checkout: React.FC = () => {
   const { cart, totalPrice, clearCart } = useCart();
@@ -20,17 +22,49 @@ export const Checkout: React.FC = () => {
     paymentMethod: 'cash',
     note: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const deliveryFee = totalPrice >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEES['Ouagadougou Centre'];
   const finalTotal = totalPrice + deliveryFee;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, we would send this to a backend
-    setIsSubmitted(true);
-    setTimeout(() => {
-      clearCart();
-    }, 100);
+    setIsSubmitting(true);
+    
+    try {
+      await createOrder({
+        customer: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          whatsapp: formData.whatsapp,
+          neighborhood: formData.neighborhood,
+          landmark: formData.landmark,
+          city: formData.city,
+          note: formData.note
+        },
+        items: cart.map(item => ({
+          id: item.id,
+          nom: item.nom,
+          prix: item.prix,
+          quantity: item.quantity,
+          vendeur: item.vendeur
+        })),
+        total: totalPrice,
+        deliveryFee,
+        finalTotal,
+        paymentMethod: formData.paymentMethod,
+        status: 'en_attente'
+      });
+
+      setIsSubmitted(true);
+      setTimeout(() => {
+        clearCart();
+      }, 100);
+    } catch (error) {
+      toast.error("Erreur lors de la validation de la commande. Veuillez réessayer.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -211,8 +245,10 @@ export const Checkout: React.FC = () => {
 
             <button 
               type="submit"
-              className="w-full bg-secondary text-primary-dark py-5 rounded-2xl font-bold text-xl shadow-xl shadow-secondary/20 hover:bg-[#E59512] transition-all"
+              disabled={isSubmitting}
+              className="w-full bg-secondary text-primary-dark py-5 rounded-2xl font-bold text-xl shadow-xl shadow-secondary/20 hover:bg-[#E59512] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
+              {isSubmitting && <span className="animate-spin">⏳</span>}
               Confirmer ma commande
             </button>
           </form>

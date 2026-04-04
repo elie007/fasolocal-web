@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Database, Plus, Save, Trash2, Package, Truck, Settings, Check, AlertCircle, Loader2, Image as ImageIcon, Search } from 'lucide-react';
+import { Database, Plus, Save, Trash2, Package, Truck, Settings, Check, AlertCircle, Loader2, Image as ImageIcon, Search, Smartphone } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { 
@@ -9,7 +9,10 @@ import {
   updateProduit, 
   getLogisticsConfig, 
   updateLogisticsConfig,
-  LogisticsConfig 
+  LogisticsConfig,
+  listenOrders,
+  updateOrderStatus,
+  Order
 } from '../services/firestoreService';
 import { Produit, OFFICIAL_CATEGORIES } from '../data';
 import { formatPrice, cn } from '../lib/utils';
@@ -17,8 +20,11 @@ import { toast } from 'sonner';
 
 export const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'products' | 'logistics'>('products');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [activeTab, setActiveTab] = useState<'products' | 'logistics' | 'orders'>('orders');
   const [produits, setProduits] = useState<Produit[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   
@@ -37,7 +43,18 @@ export const AdminDashboard: React.FC = () => {
     return <Navigate to="/" replace />;
   }
 
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === 'Faso2024') {
+      setIsAuthenticated(true);
+    } else {
+      toast.error("Mot de passe incorrect");
+    }
+  };
+
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     const fetchData = async () => {
       setIsLoading(true);
       try {
@@ -54,7 +71,51 @@ export const AdminDashboard: React.FC = () => {
       }
     };
     fetchData();
-  }, []);
+
+    const unsubscribeOrders = listenOrders((o) => {
+      setOrders(o);
+    });
+
+    return () => {
+      unsubscribeOrders();
+    };
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-gray-100 w-full max-w-md text-center space-y-6"
+        >
+          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
+            <Settings size={40} />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold font-serif">Accès Administrateur</h1>
+            <p className="text-gray-500">Veuillez entrer le mot de passe pour continuer.</p>
+          </div>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <input 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Mot de passe"
+              className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 text-center text-xl tracking-widest"
+              autoFocus
+            />
+            <button 
+              type="submit"
+              className="w-full bg-primary text-white py-4 rounded-2xl font-bold hover:bg-primary-dark transition-all shadow-lg shadow-primary/20"
+            >
+              Se connecter
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
 
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,6 +174,15 @@ export const AdminDashboard: React.FC = () => {
           
           <div className="flex bg-white/10 p-1 rounded-2xl backdrop-blur-md">
             <button 
+              onClick={() => setActiveTab('orders')}
+              className={cn(
+                "px-6 py-2 rounded-xl font-bold transition-all",
+                activeTab === 'orders' ? "bg-white text-primary-dark shadow-lg" : "text-white hover:bg-white/5"
+              )}
+            >
+              Commandes
+            </button>
+            <button 
               onClick={() => setActiveTab('products')}
               className={cn(
                 "px-6 py-2 rounded-xl font-bold transition-all",
@@ -135,7 +205,81 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
-        {activeTab === 'products' ? (
+        {activeTab === 'orders' ? (
+          <div className="space-y-6">
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-gray-50 border-b border-gray-100">
+                    <tr>
+                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Client / Date</th>
+                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Articles</th>
+                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Total</th>
+                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Statut</th>
+                      <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {orders.map((order) => (
+                      <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="space-y-1">
+                            <p className="font-bold text-gray-900">{order.customer.firstName} {order.customer.lastName}</p>
+                            <p className="text-xs text-gray-500 flex items-center gap-1">
+                              <Smartphone size={12} className="text-[#25D366]" /> {order.customer.whatsapp}
+                            </p>
+                            <p className="text-[10px] text-gray-400">
+                              {order.createdAt?.toDate ? order.createdAt.toDate().toLocaleString('fr-FR') : 'Date inconnue'}
+                            </p>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-xs text-gray-600 max-w-xs">
+                            {order.items.map((item, i) => (
+                              <span key={i}>
+                                {item.quantity}x {item.nom}{i < order.items.length - 1 ? ', ' : ''}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 font-bold text-gray-900">{formatPrice(order.finalTotal)}</td>
+                        <td className="px-6 py-4">
+                          <select 
+                            value={order.status}
+                            onChange={(e) => updateOrderStatus(order.id, e.target.value as any)}
+                            className={cn(
+                              "text-[10px] font-bold px-2 py-1 rounded-full border-none focus:ring-0 cursor-pointer",
+                              order.status === 'en_attente' && "bg-yellow-100 text-yellow-700",
+                              order.status === 'en_cours' && "bg-blue-100 text-blue-700",
+                              order.status === 'livre' && "bg-green-100 text-green-700",
+                              order.status === 'annule' && "bg-red-100 text-red-700"
+                            )}
+                          >
+                            <option value="en_attente">En attente</option>
+                            <option value="en_cours">En cours</option>
+                            <option value="livre">Livré</option>
+                            <option value="annule">Annulé</option>
+                          </select>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <button 
+                            onClick={() => {
+                              const text = `Bonjour ${order.customer.firstName}, votre commande FasoLocal est en cours de traitement !`;
+                              window.open(`https://wa.me/${order.customer.whatsapp.replace(/\+/g, '')}?text=${encodeURIComponent(text)}`, '_blank');
+                            }}
+                            className="text-primary font-bold hover:underline text-sm flex items-center gap-1 justify-end"
+                          >
+                            <Smartphone size={14} /> WhatsApp
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === 'products' ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Product List */}
             <div className="lg:col-span-2 space-y-6">

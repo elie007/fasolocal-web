@@ -66,6 +66,7 @@ export default function App() {
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:id" element={<BlogPost />} />
                 <Route path="/tableau-de-bord" element={<SellerDashboard />} />
+                <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin-fasolocal" element={<AdminDashboard />} />
                 <Route path="/devenir-producteur" element={<BecomeSeller />} />
                 <Route path="/brand-assets" element={<BrandAssets />} />

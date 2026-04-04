@@ -113,6 +113,26 @@ export interface LogisticsConfig {
   seuilGratuite: number;
 }
 
+export interface Order {
+  id: string;
+  customer: {
+    firstName: string;
+    lastName: string;
+    whatsapp: string;
+    neighborhood: string;
+    landmark: string;
+    city: string;
+    note?: string;
+  };
+  items: any[];
+  total: number;
+  deliveryFee: number;
+  finalTotal: number;
+  paymentMethod: string;
+  status: 'en_attente' | 'en_cours' | 'livre' | 'annule';
+  createdAt: any;
+}
+
 export const getProduits = async (): Promise<Produit[]> => {
   try {
     const querySnapshot = await getDocs(collection(db, 'produits'));
@@ -297,5 +317,46 @@ export const searchProduits = async (searchTerm: string): Promise<Produit[]> => 
   } catch (error) {
     console.error("Erreur lors de la recherche des produits:", error);
     return [];
+  }
+};
+
+export const createOrder = async (order: Omit<Order, 'id' | 'createdAt'>) => {
+  try {
+    const docRef = await addDoc(collection(db, 'commandes'), {
+      ...order,
+      createdAt: serverTimestamp()
+    });
+    return docRef.id;
+  } catch (error) {
+    console.error("Erreur lors de la création de la commande:", error);
+    throw error;
+  }
+};
+
+export const listenOrders = (callback: (orders: Order[]) => void) => {
+  return onSnapshot(collection(db, 'commandes'), (snapshot) => {
+    const orders = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Order));
+    // Sort by date descending
+    orders.sort((a, b) => {
+      const dateA = a.createdAt?.seconds || 0;
+      const dateB = b.createdAt?.seconds || 0;
+      return dateB - dateA;
+    });
+    callback(orders);
+  }, (error) => {
+    console.error("Erreur lors de l'écoute des commandes:", error);
+  });
+};
+
+export const updateOrderStatus = async (orderId: string, status: Order['status']) => {
+  try {
+    const docRef = doc(db, 'commandes', orderId);
+    await setDoc(docRef, { status }, { merge: true });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du statut de la commande:", error);
+    throw error;
   }
 };
