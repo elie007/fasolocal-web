@@ -149,14 +149,27 @@ export const Home: React.FC = () => {
                 navigate(`/boutique?category=${encodeURIComponent(cat.id)}`);
               }}
               className={cn(
-                "flex flex-col items-center justify-center gap-2 px-4 py-4 min-w-[120px] lg:w-full rounded-lg transition-all duration-300 active:scale-95 border",
+                "flex flex-col items-center justify-center gap-2 px-4 py-6 min-w-[160px] lg:w-full rounded-lg transition-all duration-300 active:scale-95 border group",
                 "bg-background text-text border-gray-200 hover:bg-accent"
               )}
             >
-              <span className="text-2xl sm:text-3xl">{cat.icon}</span>
-              <span className="text-xs sm:text-sm font-bold text-center leading-tight whitespace-normal">
-                {cat.label}
-              </span>
+              <span className="text-2xl sm:text-3xl group-hover:scale-110 transition-transform">{cat.icon}</span>
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-xs sm:text-sm font-bold text-center leading-tight whitespace-normal">
+                  {cat.label}
+                </span>
+                {(cat as any).description && (
+                  <span className="text-[10px] text-gray-500 text-center leading-tight opacity-0 group-hover:opacity-100 transition-opacity hidden md:block">
+                    {(cat as any).description}
+                  </span>
+                )}
+                {/* Always show on mobile for better context, or keep it hidden if too cluttered */}
+                {(cat as any).description && (
+                  <span className="text-[9px] text-gray-400 text-center leading-tight md:hidden">
+                    {(cat as any).description}
+                  </span>
+                )}
+              </div>
             </button>
           ))}
         </div>

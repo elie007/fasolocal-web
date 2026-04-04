@@ -20,12 +20,12 @@ export interface Produit {
 }
 
 export const OFFICIAL_CATEGORIES = [
-  { id: 'Tout', icon: '🏠', label: 'Tout' },
-  { id: 'Nutrition infantile', icon: '👶', label: 'Nutrition infantile' },
-  { id: 'Céréales et Farines', icon: '🌾', label: 'Céréales et Farines' },
-  { id: 'Condiments et Épices', icon: '🧂', label: 'Condiments et Épices' },
-  { id: 'Petit déjeuner', icon: '☕', label: 'Petit déjeuner' },
-  { id: 'Snack et Boissons', icon: '🥤', label: 'Snack et Boissons' }
+  { id: 'Tout', icon: '🏠', label: 'Tout', description: 'Tous nos produits locaux' },
+  { id: 'Nutrition infantile', icon: '👶', label: 'Nutrition infantile', description: 'Bouillies fortifiées et farines naturelles pour une croissance saine.' },
+  { id: 'Céréales et Farines', icon: '🌾', label: 'Céréales et Farines', description: 'Mil, maïs, fonio et sorgho transformés pour vos plats quotidiens.' },
+  { id: 'Condiments et Épices', icon: '🧂', label: 'Condiments et Épices', description: 'Soumbala pur et épices artisanales pour le goût authentique du Faso.' },
+  { id: 'Petit déjeuner', icon: '☕', label: 'Petit déjeuner', description: 'Miel, confitures et produits pour bien démarrer la journée.' },
+  { id: 'Snack et Boissons', icon: '🥤', label: 'Snack et Boissons', description: 'Jus de bissap et amuse-gueules 100% naturels faits avec passion.' }
 ];
 
 export const PRODUITS: Produit[] = [
